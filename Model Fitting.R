@@ -1,6 +1,13 @@
-
-
+## model fitting for linear model using newton raphson method
 fe_prov_linear <- function(data, xchar, ychar, provchar, maxiter = 1e4, tol=1e-5){
+  #       data: a data frame including response, provider ID, and  
+  #             covariates, with missing values imputed
+  #     xchar: a vector of character strings as names of covariates
+  #     ychar: a character string as name of response variable
+  #  provchar: a character string as name of variable consisting of provider IDs
+  #  maxiter: maximum iterations allowed
+  #  tol: tolerance for stopping criterion
+  
   data <- data[which(data$included==1),]
   
   prov_response_len <- sapply(split(data[, ychar], data[, provchar]), length)
@@ -37,7 +44,16 @@ fe_prov_linear <- function(data, xchar, ychar, provchar, maxiter = 1e4, tol=1e-5
   return(list(gamma = gamma, beta = beta, fitted = fitted))
 }
 
+## Model fitting for logistic model using newton raphson method
 fe_prov_logistic <- function(data, xchar, ychar, provchar, maxiter = 1e4, tol=1e-5){
+  #       data: a data frame including response, provider ID, and  
+  #             covariates, with missing values imputed
+  #     xchar: a vector of character strings as names of covariates
+  #     ychar: a character string as name of response variable
+  #  provchar: a character string as name of variable consisting of provider IDs
+  #  maxiter: maximum iterations allowed
+  #  tol: tolerance for stopping criterion
+  
   data <- data[which(data$included==1),]
   
   prov_response_len <- sapply(split(data[, ychar], data[, provchar]), length)
@@ -117,7 +133,8 @@ sqrt(mean((res1$fitted-Inpatient[which(Inpatient$included==1),ychar])^2)) # with
 fit1 <- lm(CLM_PMT_AMT~.,data = Inpatient[,c(7,10:24)])
 sqrt(mean((fitted.values(fit1)-Inpatient[,ychar])^2)) # without provider effect
 
-# testing error
+# testing error 
+## include sample 2 as test data, need to match the provider information before further calculation
 Inpatient_2_new <- Inpatient_2[which(Inpatient_2$included==1),]
 PRV_Diff <- setdiff(unique(Inpatient_2_new$PRVDR_NUM),unique(names(res1$gamma)))# all included
 
